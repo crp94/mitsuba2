@@ -27,7 +27,7 @@ MTS_PY_EXPORT(Interaction) {
 template<typename Class, typename PyClass>
 void bind_slicing_operator_surfaceinteraction(PyClass &cl) {
     using Float = typename Class::Float;
-    if constexpr (is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>) { // TODO could we enable this for CUDA?
+    if constexpr (ek::is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>) { // TODO could we enable this for CUDA?
         cl.def("__getitem__", [](Class &si, size_t i) {
             if (i >= slices(si))
                 throw py::index_error();
@@ -83,7 +83,7 @@ void bind_slicing_operator_surfaceinteraction(PyClass &cl) {
         });
     }
     cl.def_static("zero", [](size_t size) {
-            if constexpr (!is_dynamic_v<Float>) {
+            if constexpr (!ek::is_dynamic_v<Float>) {
                 if (size != 1)
                     throw std::runtime_error("zero(): Size must equal 1 in scalar mode!");
             }
@@ -155,7 +155,7 @@ MTS_PY_EXPORT(SurfaceInteraction) {
 template<typename Class, typename PyClass>
 void bind_slicing_operator_mediuminteraction(PyClass &cl) {
     using Float = typename Class::Float;
-    if constexpr (is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>) { // TODO could we enable this for CUDA?
+    if constexpr (ek::is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>) { // TODO could we enable this for CUDA?
         cl.def("__getitem__", [](Class &mi, size_t i) {
             if (i >= slices(mi))
                 throw py::index_error();
@@ -193,7 +193,7 @@ void bind_slicing_operator_mediuminteraction(PyClass &cl) {
         });
     }
     cl.def_static("zero", [](size_t size) {
-            if constexpr (!is_dynamic_v<Float>) {
+            if constexpr (!ek::is_dynamic_v<Float>) {
                 if (size != 1)
                     throw std::runtime_error("zero(): Size must equal 1 in scalar mode!");
             }
@@ -244,7 +244,7 @@ MTS_PY_EXPORT(PreliminaryIntersection) {
         .def_repr(PreliminaryIntersection3f);
 
     // Do not binding this method for packet variants
-    if constexpr (!(is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>))
+    if constexpr (!(ek::is_dynamic_v<Float> && !ek::is_cuda_array_v<Float>))
         pi.def("compute_surface_interaction", &PreliminaryIntersection3f::compute_surface_interaction,
                D(PreliminaryIntersection, compute_surface_interaction),
                "ray"_a, "flags"_a = HitComputeFlags::All, "active"_a = true);
