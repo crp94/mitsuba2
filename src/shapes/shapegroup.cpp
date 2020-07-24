@@ -161,7 +161,7 @@ ShapeGroup<Float, Spectrum>::compute_surface_interaction(const Ray3f &ray,
             Assert(pi.shape_index < m_shapes.size());
             pi.shape = m_shapes[pi.shape_index];
         } else {
-            using ShapePtr = replace_scalar_t<Float, const Base *>;
+            using ShapePtr = ek::replace_scalar_t<Float, const Base *>;
             Assert(all(pi.shape_index < m_shapes.size()));
             pi.shape = ek::gather<ShapePtr>(m_shapes.data(), pi.shape_index, active);
         }
